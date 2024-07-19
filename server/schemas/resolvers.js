@@ -3,6 +3,7 @@ const { AuthenticationError, signToken } = require("../utils/auth");
 
 const resolvers = {
   Query: {
+    // get a user by using the authMiddleware function as context
     me: async (parent, args, context) => {
       if (context.user) {
         const userData = await User.findOne({ _id: context.user._id })
@@ -14,6 +15,7 @@ const resolvers = {
     },
   },
   Mutation: {
+    // login a user with the email and password
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
       if (!user) {
@@ -26,11 +28,13 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
+    // add a user with a username, email, and password
     addUser: async (parent, { username, email, password }) => {
       const user = await User.create({ username, email, password });
       const token = signToken(user);
       return { token, user };
     },
+    // save a book to a user's account
     saveBook: async (parent, { input }, context) => {
       if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
@@ -41,6 +45,7 @@ const resolvers = {
         return updatedUser;
       }
     },
+    // remove a book from a user's account
     removeBook: async (parent, { bookId }, context) => {
       if (context.user) {
         const updatedUser = await User.findOneAndUpdate(

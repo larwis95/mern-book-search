@@ -8,6 +8,7 @@ import { searchGoogleBooks } from "../utils/API";
 import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
 
 const SearchBooks = () => {
+  // create a useMutation hook that will execute the `SAVE_BOOK` mutation in the Apollo Server
   const [saveBook, { error }] = useMutation(SAVE_BOOK);
   // create state for holding returned google api data
   const [searchedBooks, setSearchedBooks] = useState([]);
@@ -62,13 +63,13 @@ const SearchBooks = () => {
 
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
-    console.log(bookToSave);
 
     if (!token) {
       return false;
     }
 
     try {
+      // execute mutation and pass in variable of BookInput type, in this case the book we want to save
       await saveBook({
         variables: { input: bookToSave },
       });

@@ -8,9 +8,12 @@ import Auth from "../utils/auth";
 import { removeBookId } from "../utils/localStorage";
 
 const SavedBooks = () => {
+  // useQuery to get the current user's data, uses the auth token to lookup the user
   const { loading, data } = useQuery(QUERY_ME);
+  // useMutation to remove a book from the user's saved books list
   const [deleteBook] = useMutation(REMOVE_BOOK);
 
+  // extract the user data from the query's response, if it exists
   const userData = data?.me || {};
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
@@ -22,6 +25,7 @@ const SavedBooks = () => {
     }
 
     try {
+      // use the removeBook mutation to remove the book from the user's savedBooks list by the bookId
       await deleteBook({
         variables: { bookId },
       });
